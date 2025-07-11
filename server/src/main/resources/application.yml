@@ -1,1 +1,22 @@
-spring.application.name=server
+#spring.application.name=server
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:3306/postgres
+    username: postgres
+    password: 1234
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show_sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  secret: uzbekistan1Uzbekistan2
+  access-time: 90000
+  refresh-time: 604800000
