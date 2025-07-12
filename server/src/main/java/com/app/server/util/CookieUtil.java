@@ -14,10 +14,10 @@ public class CookieUtil {
     public void addCookie(String refreshToken, HttpServletResponse response){
         ResponseCookie cookie=ResponseCookie.from("refreshToken",refreshToken)
                 .httpOnly(true)
-                .maxAge(refreshTime)
+                .maxAge(refreshTime/1000)
                 .secure(false)
                 .path("/")
-                .sameSite("None")
+                //.sameSite("None")
                 .build();
         response.addHeader("Set-Cookie",cookie.toString());
     }
@@ -28,7 +28,7 @@ public class CookieUtil {
                 .maxAge(refreshTime)
                 .secure(false)
                 .path("/")
-                .sameSite("None")
+                //.sameSite("None")
                 .build();
         response.addHeader("Set-Cookie",cookie.toString());
     }

@@ -20,4 +20,16 @@ public class TokenService {
         token.setExpiryDate(LocalDateTime.now().plusDays(7));
         return tokenRepository.save(token);
     }
+    public Token findToken(String refreshToken){
+        return tokenRepository.findByRefreshToken(refreshToken).orElseThrow(()->new RuntimeException("Token not found"));
+    }
+    public Token findTokenExpiryDate(LocalDateTime expiryDate){
+        return tokenRepository.findByExpiryDate(expiryDate).orElseThrow(()->new RuntimeException("Token not found by expiry date"));
+    }
+    public Token findTokenByUser(User user){
+        return tokenRepository.findByUser(user).orElseThrow(()->new RuntimeException("Token not found by user"));
+    }
+    public Token regenerateToken(User user,String refreshToken){
+        return tokenRepository.findByUser(user).orElseGet(()->createToken(user,refreshToken));
+    }
 }

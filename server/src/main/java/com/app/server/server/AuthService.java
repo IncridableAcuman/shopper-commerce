@@ -1,5 +1,6 @@
 package com.app.server.server;
 
+import com.app.server.dto.AuthRequest;
 import com.app.server.dto.AuthResponse;
 import com.app.server.dto.RegisterRequest;
 import com.app.server.entity.Token;
@@ -35,6 +36,24 @@ public class AuthService {
                 user.getRole(),
                 accessToken,
                 refreshToken
+        );
+    }
+//    login
+    public AuthResponse login(AuthRequest request,HttpServletResponse response){
+        User user=userService.findUser(request.getEmail());
+        userService.isPasswordEqual(request.getPassword(), user.getPassword());
+        cookieUtil.removeToken(response);
+        String newAccessToken= jwtUtil.generateAccessToken(user);
+        String newRefreshToken= jwtUtil.generateRefreshToken(user);
+        tokenService.regenerateToken(user,newRefreshToken);
+        cookieUtil.addCookie(newRefreshToken,response);
+        return new AuthResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole(),
+                newAccessToken,
+                newRefreshToken
         );
     }
 }

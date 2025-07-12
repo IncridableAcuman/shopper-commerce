@@ -12,7 +12,7 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    @Value("${jwt.secret")
+    @Value("${jwt.secret}")
     private String secret;
 
     @Value("${jwt.access-time}")
@@ -54,7 +54,7 @@ public class JwtUtil {
 //    validate token
     public boolean validateToken(String token){
         try {
-             Jwts.parser().build().parseSignedClaims(token).getPayload();
+             Jwts.parser().build().parseSignedClaims(token);
              return true;
         } catch (RuntimeException e) {
             return false;

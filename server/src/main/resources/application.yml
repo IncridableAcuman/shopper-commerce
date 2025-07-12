@@ -17,6 +17,6 @@ spring:
         format_sql: true
 
 jwt:
-  secret: uzbekistan1Uzbekistan2
+  secret: uzbekistan1Uzbekistan2Uzbekistan3
   access-time: 90000
   refresh-time: 604800000

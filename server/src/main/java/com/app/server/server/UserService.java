@@ -25,4 +25,12 @@ public class UserService {
         user.setRole(Role.USER);
         return userRepository.save(user);
     }
+    public User findUser(String email){
+        return userRepository.findByEmail(email).orElseThrow(()->new RuntimeException("User not found!"));
+    }
+    public void isPasswordEqual(String password,String userPassword){
+        if(!passwordEncoder.matches(password,userPassword)){
+            throw new RuntimeException("Password is not equal");
+        }
+    }
 }
