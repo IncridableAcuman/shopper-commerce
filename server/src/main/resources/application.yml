@@ -3,6 +3,13 @@ server:
   port: 8080
 
 spring:
+  mail:
+    smtp:
+      host: smtp.gmail.com
+      port: 587
+      username: abdusharipovizzat03@gmail.com
+      password: 1234
+
   datasource:
     url: jdbc:postgresql://localhost:3306/postgres
     username: postgres
@@ -20,3 +27,6 @@ jwt:
   secret: uzbekistan1Uzbekistan2Uzbekistan3
   access-time: 90000
   refresh-time: 604800000
+
+client:
+  url: http://localhost:5173

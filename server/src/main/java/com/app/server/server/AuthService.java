@@ -1,12 +1,11 @@
 package com.app.server.server;
 
-import com.app.server.dto.AuthRequest;
-import com.app.server.dto.AuthResponse;
-import com.app.server.dto.RegisterRequest;
+import com.app.server.dto.*;
 import com.app.server.entity.Token;
 import com.app.server.entity.User;
 import com.app.server.util.CookieUtil;
 import com.app.server.util.JwtUtil;
+import com.app.server.util.MailUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +18,7 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final TokenService tokenService;
     private final CookieUtil cookieUtil;
+    private final MailUtil mailUtil;
 
 //    register
     @Transactional
@@ -98,5 +98,27 @@ public class AuthService {
         tokenService.findToken(refreshToken);
         tokenService.deleteToken(user);
         cookieUtil.removeToken(response);
+    }
+//    forgot password
+    @Transactional
+    public String forgotPassword(ForgotPasswordRequest request){
+        User user=userService.findUser(request.getEmail());
+        String token= jwtUtil.generateAccessToken(user);
+        mailUtil.sendMail(user.getEmail(), "<h1>Forgot Password</h1>","http://localhost:5173/reset-password?token="+token);
+        return "Reset password link sent to email";
+    }
+//    reset password
+    @Transactional
+    public String resetPassword(ResetPassword resetPassword){
+        if(resetPassword.getToken()==null){
+            throw new IllegalArgumentException("Invalid token");
+        }
+        String email= jwtUtil.extractSubject(resetPassword.getToken());
+        if(email==null){
+            throw new IllegalArgumentException("Email is empty!");
+        }
+        userService.findUser(email);
+        userService.updatePassword(resetPassword.getPassword());
+        return "Password updated successFully";
     }
 }

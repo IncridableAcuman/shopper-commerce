@@ -1,8 +1,6 @@
 package com.app.server.controller;
 
-import com.app.server.dto.AuthRequest;
-import com.app.server.dto.AuthResponse;
-import com.app.server.dto.RegisterRequest;
+import com.app.server.dto.*;
 import com.app.server.server.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -43,5 +41,15 @@ public class AuthController {
         String refreshToken=authorization.substring(7);
         authService.logout(refreshToken,response);
         return ResponseEntity.ok("Logged out");
+    }
+//    forgot password
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgotPasswordRequest request){
+        return ResponseEntity.ok(authService.forgotPassword(request));
+    }
+    //    reset password
+    @PutMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPassword resetPassword){
+        return ResponseEntity.ok(authService.resetPassword(resetPassword));
     }
 }

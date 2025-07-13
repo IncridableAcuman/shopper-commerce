@@ -33,4 +33,9 @@ public class UserService {
             throw new IllegalArgumentException("Password is not equal");
         }
     }
+    public void updatePassword(String password){
+        User user=new User();
+        user.setPassword(passwordEncoder.encode(password));
+         userRepository.save(user);
+    }
 }
