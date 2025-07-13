@@ -3,6 +3,7 @@ package com.app.server.server;
 import com.app.server.entity.Token;
 import com.app.server.entity.User;
 import com.app.server.repository.TokenRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 public class TokenService {
     private final TokenRepository tokenRepository;
 
+    @Transactional
     public Token createToken(User user,String refreshToken){
         Token token=new Token();
         token.setRefreshToken(refreshToken);
@@ -20,16 +22,31 @@ public class TokenService {
         token.setExpiryDate(LocalDateTime.now().plusDays(7));
         return tokenRepository.save(token);
     }
-    public Token findToken(String refreshToken){
-        return tokenRepository.findByRefreshToken(refreshToken).orElseThrow(()->new RuntimeException("Token not found"));
+    public void findToken(String refreshToken){
+        Token token = tokenRepository.findByRefreshToken(refreshToken).orElseThrow(() -> new RuntimeException("Token not found"));
+        if (token.getExpiryDate().isBefore(LocalDateTime.now())){
+            tokenRepository.delete(token);
+            throw new IllegalArgumentException("Token is expired");
+        }
     }
     public Token findTokenExpiryDate(LocalDateTime expiryDate){
-        return tokenRepository.findByExpiryDate(expiryDate).orElseThrow(()->new RuntimeException("Token not found by expiry date"));
+        return tokenRepository.findByExpiryDate(expiryDate).orElseThrow(()->new IllegalArgumentException("Token not found by expiry date"));
     }
     public Token findTokenByUser(User user){
-        return tokenRepository.findByUser(user).orElseThrow(()->new RuntimeException("Token not found by user"));
+        return tokenRepository.findByUser(user).orElseThrow(()->new IllegalArgumentException("Token not found by user"));
     }
-    public Token regenerateToken(User user,String refreshToken){
-        return tokenRepository.findByUser(user).orElseGet(()->createToken(user,refreshToken));
+    @Transactional
+    public void regenerateToken(User user, String refreshToken){
+        tokenRepository.findByUser(user).orElseGet(()->createToken(user,refreshToken));
+    }
+    @Transactional
+    public void deleteToken(String refreshToken){
+        tokenRepository.findByRefreshToken(refreshToken).ifPresent(tokenRepository::delete);
+    }
+    @Transactional
+    public void deleteToken(User user){
+       Token token = findTokenByUser(user);
+       tokenRepository.delete(token);
+
     }
 }

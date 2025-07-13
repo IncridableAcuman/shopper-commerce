@@ -8,10 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,5 +24,24 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request,HttpServletResponse response){
         return ResponseEntity.ok(authService.login(request,response));
+    }
+//    refresh
+    @GetMapping("/refresh")
+    public ResponseEntity<AuthResponse> refresh(@RequestHeader("Authorization") String authorization,HttpServletResponse response){
+        if(!authorization.startsWith("Bearer ")){
+            throw new RuntimeException("Invalid token format");
+        }
+        String refreshToken=authorization.substring(7);
+        return ResponseEntity.ok(authService.refresh(refreshToken,response));
+    }
+//    logout
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorization,HttpServletResponse response){
+        if(!authorization.startsWith("Bearer ")){
+            throw new RuntimeException("Invalid token");
+        }
+        String refreshToken=authorization.substring(7);
+        authService.logout(refreshToken,response);
+        return ResponseEntity.ok("Logged out");
     }
 }

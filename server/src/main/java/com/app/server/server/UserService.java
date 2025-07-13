@@ -16,7 +16,7 @@ public class UserService {
 
     public User createUser(RegisterRequest request){
         if(userRepository.findByEmail(request.getEmail()).isPresent()){
-            throw new RuntimeException("User already exist");
+            throw new IllegalArgumentException("User already exist");
         }
         User user=new User();
         user.setUsername(request.getUsername());
@@ -26,11 +26,11 @@ public class UserService {
         return userRepository.save(user);
     }
     public User findUser(String email){
-        return userRepository.findByEmail(email).orElseThrow(()->new RuntimeException("User not found!"));
+        return userRepository.findByEmail(email).orElseThrow(()->new IllegalArgumentException("User not found!"));
     }
-    public void isPasswordEqual(String password,String userPassword){
+    public void validatePassword(String password,String userPassword){
         if(!passwordEncoder.matches(password,userPassword)){
-            throw new RuntimeException("Password is not equal");
+            throw new IllegalArgumentException("Password is not equal");
         }
     }
 }

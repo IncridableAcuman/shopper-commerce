@@ -1,11 +1,17 @@
 package com.app.server.util;
 
 import com.app.server.entity.User;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
@@ -21,8 +27,10 @@ public class JwtUtil {
     @Value("${jwt.refresh-time}")
     private long refreshTime;
 
-    private Key getSigningKey(){
-        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+    private final SecretKey signingKey;
+
+    public JwtUtil(@Value("${jwt.secret}") String secret){
+        this.signingKey=Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
 //    generate accessToken
@@ -35,7 +43,7 @@ public class JwtUtil {
                 .claim("role",user.getRole())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()+accessTime))
-                .signWith(getSigningKey())
+                .signWith(signingKey)
                 .compact();
     }
 //    generate refreshToken
@@ -48,44 +56,64 @@ public class JwtUtil {
                 .claim("role",user.getRole())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()+refreshTime))
-                .signWith(getSigningKey())
+                .signWith(signingKey)
                 .compact();
     }
 //    validate token
-    public boolean validateToken(String token){
+    public void validateToken(String token){
         try {
-             Jwts.parser().build().parseSignedClaims(token);
-             return true;
-        } catch (RuntimeException e) {
-            return false;
+             Jwts.parser().verifyWith(signingKey).build().parseSignedClaims(token);
+        } catch (SignatureException e){
+            throw new JwtException("Invalid token signature");
+        } catch (ExpiredJwtException e){
+            throw new JwtException("Token is expired");
+        } catch (MalformedJwtException e){
+            throw new JwtException("Malformed token");
+        } catch (Exception e){
+            throw new JwtException("Token validation failed");
         }
     }
 //    is token expired
     public boolean isTokenExpired(String token){
-        return Jwts
-                .parser()
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getExpiration()
-                .before(new Date());
+       try {
+           return Jwts
+                   .parser()
+                   .verifyWith(signingKey)
+                   .build()
+                   .parseSignedClaims(token)
+                   .getPayload()
+                   .getExpiration()
+                   .before(new Date());
+       } catch (ExpiredJwtException e){
+           return true;
+       }
     }
 //    extract subject from token
     public String extractSubject(String token){
-        return Jwts
-                .parser()
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+        try {
+            return Jwts
+                    .parser()
+                    .verifyWith(signingKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getSubject();
+        } catch (JwtException e){
+            return null;
+        }
     }
 //    extract expiration from token
-    public Date extractExpiration(String token){
-        return Jwts
-                .parser()
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .getExpiration();
+    public Date extractExpiration(String refreshToken){
+       try {
+           return Jwts
+                   .parser()
+                   .verifyWith(signingKey)
+                   .build()
+                   .parseSignedClaims(refreshToken)
+                   .getPayload()
+                   .getExpiration();
+       } catch (JwtException e){
+           return null;
+       }
     }
 }
