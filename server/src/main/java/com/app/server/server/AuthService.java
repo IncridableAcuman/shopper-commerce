@@ -19,7 +19,6 @@ public class AuthService {
     private final CookieUtil cookieUtil;
     private final MailUtil mailUtil;
 
-//    register
     @Transactional
     public AuthResponse register(RegisterRequest request, HttpServletResponse response){
         User user=userService.createUser(request);
@@ -29,7 +28,6 @@ public class AuthService {
         cookieUtil.addCookie(refreshToken,response);
         return userService.responseUser(user,accessToken,refreshToken);
     }
-//    login
     @Transactional
     public AuthResponse login(AuthRequest request,HttpServletResponse response){
         User user=userService.findUser(request.getEmail());
@@ -41,7 +39,6 @@ public class AuthService {
         cookieUtil.addCookie(newRefreshToken,response);
         return userService.responseUser(user,newAccessToken,newRefreshToken);
     }
-//    refresh
     @Transactional
     public AuthResponse refresh(String refreshToken,HttpServletResponse response){
         if(refreshToken==null){
@@ -61,7 +58,6 @@ public class AuthService {
         cookieUtil.addCookie(newRefreshToken,response);
         return userService.responseUser(user,accessToken,refreshToken);
     }
-//    logout
     public void logout(String refreshToken,HttpServletResponse response){
         if(refreshToken==null){
             throw new RuntimeException("Refresh token is empty or invalid");
@@ -77,7 +73,6 @@ public class AuthService {
         tokenService.deleteToken(user);
         cookieUtil.removeToken(response);
     }
-//    forgot password
     @Transactional
     public String forgotPassword(ForgotPasswordRequest request){
         User user=userService.findUser(request.getEmail());
@@ -85,7 +80,6 @@ public class AuthService {
         mailUtil.sendMail(user.getEmail(), "<h1>Forgot Password</h1>","http://localhost:5173/reset-password?token="+token);
         return "Reset password link sent to email";
     }
-//    reset password
     @Transactional
     public String resetPassword(ResetPassword resetPassword){
         if(resetPassword.getToken()==null){
