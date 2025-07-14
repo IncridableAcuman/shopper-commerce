@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class TokenService {
     private final TokenRepository tokenRepository;
 
+
     @Transactional
     public Token createToken(User user,String refreshToken){
         Token token=new Token();
@@ -29,9 +30,6 @@ public class TokenService {
             throw new IllegalArgumentException("Token is expired");
         }
     }
-    public Token findTokenExpiryDate(LocalDateTime expiryDate){
-        return tokenRepository.findByExpiryDate(expiryDate).orElseThrow(()->new IllegalArgumentException("Token not found by expiry date"));
-    }
     public Token findTokenByUser(User user){
         return tokenRepository.findByUser(user).orElseThrow(()->new IllegalArgumentException("Token not found by user"));
     }
@@ -40,13 +38,8 @@ public class TokenService {
         tokenRepository.findByUser(user).orElseGet(()->createToken(user,refreshToken));
     }
     @Transactional
-    public void deleteToken(String refreshToken){
-        tokenRepository.findByRefreshToken(refreshToken).ifPresent(tokenRepository::delete);
-    }
-    @Transactional
     public void deleteToken(User user){
        Token token = findTokenByUser(user);
        tokenRepository.delete(token);
-
     }
 }

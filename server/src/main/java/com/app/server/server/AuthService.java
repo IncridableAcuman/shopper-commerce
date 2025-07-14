@@ -1,7 +1,6 @@
 package com.app.server.server;
 
 import com.app.server.dto.*;
-import com.app.server.entity.Token;
 import com.app.server.entity.User;
 import com.app.server.util.CookieUtil;
 import com.app.server.util.JwtUtil;
@@ -26,16 +25,9 @@ public class AuthService {
         User user=userService.createUser(request);
         String accessToken= jwtUtil.generateAccessToken(user);
         String refreshToken= jwtUtil.generateRefreshToken(user);
-        Token token=tokenService.createToken(user,refreshToken);
-        cookieUtil.addCookie(token.getRefreshToken(),response);
-        return new AuthResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getRole(),
-                accessToken,
-                refreshToken
-        );
+        tokenService.createToken(user,refreshToken);
+        cookieUtil.addCookie(refreshToken,response);
+        return userService.responseUser(user,accessToken,refreshToken);
     }
 //    login
     @Transactional
@@ -47,14 +39,7 @@ public class AuthService {
         String newRefreshToken= jwtUtil.generateRefreshToken(user);
         tokenService.regenerateToken(user,newRefreshToken);
         cookieUtil.addCookie(newRefreshToken,response);
-        return new AuthResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getRole(),
-                newAccessToken,
-                newRefreshToken
-        );
+        return userService.responseUser(user,newAccessToken,newRefreshToken);
     }
 //    refresh
     @Transactional
@@ -74,14 +59,7 @@ public class AuthService {
         String newRefreshToken= jwtUtil.generateRefreshToken(user);
         tokenService.regenerateToken(user,newRefreshToken);
         cookieUtil.addCookie(newRefreshToken,response);
-        return new AuthResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getRole(),
-                accessToken,
-                newRefreshToken
-        );
+        return userService.responseUser(user,accessToken,refreshToken);
     }
 //    logout
     public void logout(String refreshToken,HttpServletResponse response){
@@ -117,8 +95,8 @@ public class AuthService {
         if(email==null){
             throw new IllegalArgumentException("Email is empty!");
         }
-        userService.findUser(email);
-        userService.updatePassword(resetPassword.getPassword());
+        User user=userService.findUser(email);
+        userService.updatePassword(user,resetPassword.getPassword());
         return "Password updated successFully";
     }
 }

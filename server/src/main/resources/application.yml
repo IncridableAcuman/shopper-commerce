@@ -4,11 +4,18 @@ server:
 
 spring:
   mail:
-    smtp:
       host: smtp.gmail.com
       port: 587
       username: abdusharipovizzat03@gmail.com
-      password: 1234
+      password: plna cdms fyvg qjpx
+      properties:
+        mail:
+          smtp:
+            auth: true
+            starttls:
+              enable: true
+            ssl:
+              trust: smtp.gmail.com
 
   datasource:
     url: jdbc:postgresql://localhost:3306/postgres

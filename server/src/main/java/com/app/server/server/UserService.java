@@ -1,5 +1,6 @@
 package com.app.server.server;
 
+import com.app.server.dto.AuthResponse;
 import com.app.server.dto.RegisterRequest;
 import com.app.server.entity.User;
 import com.app.server.enums.Role;
@@ -33,9 +34,11 @@ public class UserService {
             throw new IllegalArgumentException("Password is not equal");
         }
     }
-    public void updatePassword(String password){
-        User user=new User();
+    public void updatePassword(User user,String password){
         user.setPassword(passwordEncoder.encode(password));
          userRepository.save(user);
+    }
+    public AuthResponse responseUser(User user,String accessToken,String refreshToken){
+        return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),user.getRole(),accessToken,refreshToken);
     }
 }
