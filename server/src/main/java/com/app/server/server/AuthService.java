@@ -8,6 +8,8 @@ import com.app.server.util.MailUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -56,7 +58,7 @@ public class AuthService {
         String newRefreshToken= jwtUtil.generateRefreshToken(user);
         tokenService.regenerateToken(user,newRefreshToken);
         cookieUtil.addCookie(newRefreshToken,response);
-        return userService.responseUser(user,accessToken,refreshToken);
+        return userService.responseUser(user,accessToken,newRefreshToken);
     }
     public void logout(String refreshToken,HttpServletResponse response){
         if(refreshToken==null){
@@ -69,7 +71,6 @@ public class AuthService {
             throw new IllegalArgumentException("Invalid token");
         }
         User user=userService.findUser(email);
-        tokenService.findToken(refreshToken);
         tokenService.deleteToken(user);
         cookieUtil.removeToken(response);
     }
@@ -92,5 +93,11 @@ public class AuthService {
         User user=userService.findUser(email);
         userService.updatePassword(user,resetPassword.getPassword());
         return "Password updated successFully";
+    }
+    @Transactional
+    public AuthData userData(){
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        User user=(User) authentication.getPrincipal();
+        return new AuthData(user.getId(), user.getUsername(),user.getRole());
     }
 }

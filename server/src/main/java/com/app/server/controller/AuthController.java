@@ -52,4 +52,8 @@ public class AuthController {
     public ResponseEntity<String> resetPassword(@RequestBody ResetPassword resetPassword){
         return ResponseEntity.ok(authService.resetPassword(resetPassword));
     }
+    @GetMapping("/user-data")
+    public ResponseEntity<AuthData> userData(){
+        return ResponseEntity.ok(authService.userData());
+    }
 }

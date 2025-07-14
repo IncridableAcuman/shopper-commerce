@@ -1,19 +1,14 @@
 package com.app.server.util;
 
 import com.app.server.entity.User;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.security.SignatureException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
 
 @Component
@@ -88,16 +83,18 @@ public class JwtUtil {
            return true;
        }
     }
+    public Claims extractClaim(String token){
+        return Jwts
+                .parser()
+                .verifyWith(signingKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
 //    extract subject from token
     public String extractSubject(String token){
         try {
-            return Jwts
-                    .parser()
-                    .verifyWith(signingKey)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload()
-                    .getSubject();
+            return extractClaim(token).getSubject();
         } catch (JwtException e){
             return null;
         }
@@ -105,13 +102,7 @@ public class JwtUtil {
 //    extract expiration from token
     public Date extractExpiration(String refreshToken){
        try {
-           return Jwts
-                   .parser()
-                   .verifyWith(signingKey)
-                   .build()
-                   .parseSignedClaims(refreshToken)
-                   .getPayload()
-                   .getExpiration();
+           return extractClaim(refreshToken).getExpiration();
        } catch (JwtException e){
            return null;
        }
