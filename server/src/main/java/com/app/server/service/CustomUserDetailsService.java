@@ -1,4 +1,4 @@
-package com.app.server.server;
+package com.app.server.service;
 
 import com.app.server.entity.User;
 import com.app.server.repository.UserRepository;

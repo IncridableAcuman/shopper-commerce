@@ -1,7 +1,7 @@
 package com.app.server.controller;
 
 import com.app.server.dto.*;
-import com.app.server.server.AuthService;
+import com.app.server.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

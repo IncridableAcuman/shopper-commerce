@@ -1,4 +1,4 @@
-package com.app.server.server;
+package com.app.server.service;
 
 import com.app.server.dto.AuthResponse;
 import com.app.server.dto.RegisterRequest;

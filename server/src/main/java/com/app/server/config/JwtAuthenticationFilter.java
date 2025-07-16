@@ -1,6 +1,6 @@
 package com.app.server.config;
 
-import com.app.server.server.CustomUserDetailsService;
+import com.app.server.service.CustomUserDetailsService;
 import com.app.server.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
