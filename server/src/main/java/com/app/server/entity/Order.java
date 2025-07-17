@@ -9,9 +9,5 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "orders")
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
 public class Order {
 }
