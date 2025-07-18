@@ -39,6 +39,6 @@ public class UserService {
          userRepository.save(user);
     }
     public AuthResponse responseUser(User user,String accessToken,String refreshToken){
-        return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),user.getRole(),accessToken,refreshToken);
+        return new AuthResponse(user.getId(),user.getUsername(),user.getEmail(),user.getRole(),user.getCart(),accessToken,refreshToken);
     }
 }
