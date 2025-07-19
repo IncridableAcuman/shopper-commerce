@@ -1,7 +1,8 @@
 package com.app.server.controller;
 
-import com.app.server.entity.Cart;
+import com.app.server.dto.CartDto;
 import com.app.server.service.CartService;
+import com.app.server.util.CartMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,18 +12,19 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CartController {
     private final CartService cartService;
+    private final CartMapper cartMapper;
 
     @GetMapping
-    public ResponseEntity<Cart> getCartForUser(@RequestParam Long userId){
-        return ResponseEntity.ok(cartService.getCartForUser(userId));
+    public ResponseEntity<CartDto> getCartForUser(@RequestParam Long userId){
+        return ResponseEntity.ok(cartMapper.toDto(cartService.getCartForUser(userId)));
     }
     @PostMapping("/add")
-    public ResponseEntity<Cart> addToCart(@RequestParam Long userId,@RequestParam Long productId,@RequestParam int quantity){
-        return ResponseEntity.ok(cartService.addToCart(userId,productId,quantity));
+    public ResponseEntity<CartDto> addToCart(@RequestParam Long userId,@RequestParam Long productId,@RequestParam int quantity){
+        return ResponseEntity.ok(cartMapper.toDto(cartService.addToCart(userId,productId,quantity)));
     }
     @DeleteMapping("/remove")
-    public ResponseEntity<Cart> removeFromCart(@RequestParam Long userId,@RequestParam Long productId){
-        return ResponseEntity.ok(cartService.removeFromCart(userId,productId));
+    public ResponseEntity<CartDto> removeFromCart(@RequestParam Long userId,@RequestParam Long productId){
+        return ResponseEntity.ok(cartMapper.toDto(cartService.removeFromCart(userId,productId)));
     }
     @DeleteMapping("/clear")
     public ResponseEntity<Void> clearCart(@RequestParam Long userId){
