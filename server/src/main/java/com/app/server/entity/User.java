@@ -36,8 +36,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
-    private Cart cart;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities(){
