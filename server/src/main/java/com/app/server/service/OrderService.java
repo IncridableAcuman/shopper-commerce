@@ -1,5 +1,7 @@
 package com.app.server.service;
 
+import com.app.server.dto.OrderItemDto;
+import com.app.server.dto.OrderResponse;
 import com.app.server.entity.Cart;
 import com.app.server.entity.Order;
 import com.app.server.entity.OrderItem;
@@ -14,13 +16,13 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-    private OrderRepository orderRepository;
-    private OrderItemRepository orderItemRepository;
-    private CartRepository cartRepository;
-    private UserRepository userRepository;
+    private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final CartRepository cartRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public Order orderPlace(Long userId){
+    public OrderResponse orderPlace(Long userId){
         Cart cart=cartRepository.findByUserId(userId).orElseThrow(()->new IllegalArgumentException("Cart not found!"));
 
         if(cart.getItems().isEmpty()) throw new IllegalArgumentException("Cart is empty!");
@@ -45,10 +47,27 @@ public class OrderService {
         cart.setTotal(0.0);
         cartRepository.save(cart);
 
-        return saveOrder;
+        List<OrderItemDto> itemDto=orderItems.stream()
+                .map(item->new OrderItemDto(item.getId(),item.getProduct().getTitle(),item.getQuantity(),item.getPrice())).toList();
+
+        return new OrderResponse(saveOrder.getId(),saveOrder.getOrderTime(), saveOrder.getPrice(), itemDto);
     }
     @Transactional
-    public List<Order> getOrders(Long userId){
-        return orderRepository.findByUserId(userId);
+    public List<OrderResponse> getOrders(Long userId){
+        List<Order> orders=orderRepository.findByUserId(userId);
+
+        return orders.stream()
+                .map(order->{
+                    List<OrderItemDto> itemDto=order
+                            .getItems()
+                            .stream()
+                            .map(orderItem ->
+                                    new OrderItemDto(orderItem.getId(),
+                                            orderItem.getProduct().getTitle(),
+                                            orderItem.getQuantity(),
+                                            orderItem.getPrice()))
+                            .toList();
+                    return new OrderResponse(order.getId(),order.getOrderTime(),order.getPrice(),itemDto);
+                }).toList();
     }
 }

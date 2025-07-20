@@ -1,6 +1,6 @@
 package com.app.server.controller;
 
-import com.app.server.entity.Order;
+import com.app.server.dto.OrderResponse;
 import com.app.server.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +15,11 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/place")
-    public ResponseEntity<Order> orderPlace(@RequestParam Long userId){
+    public ResponseEntity<OrderResponse> orderPlace(@RequestParam Long userId){
         return ResponseEntity.ok(orderService.orderPlace(userId));
     }
     @GetMapping
-    public ResponseEntity<List<Order>> getOrders(@RequestParam Long userId){
+    public ResponseEntity<List<OrderResponse>> getOrders(@RequestParam Long userId){
         return ResponseEntity.ok(orderService.getOrders(userId));
     }
 }
