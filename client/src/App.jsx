@@ -12,10 +12,11 @@ import MenPage from './pages/MenPage'
 import WomenPage from './pages/WomenPage'
 import ProductData from './pages/ProductData'
 import Payment from './pages/Payment'
-
+import { ToastContainer } from 'react-toastify'
 const App = () => {
   return (
     <>
+    <ToastContainer/>
     <Routes>
       <Route path='/landing' element={<Landing/>} />
       <Route path='/register' element={<Register/>} />
