@@ -69,6 +69,7 @@ const Landing = () => {
           }
         </div>
       </div>
+      <div className="py-10"/>
       {/* exclusive */}
       <div className="bg-sky-900 w-full max-w-7xl rounded mx-auto p-4">
         <div className="flex flex-col lg:flex-row items-center justify-between px-4 sm:px-6 md:px-8 lg:px-10">
@@ -82,8 +83,54 @@ const Landing = () => {
           <img src="./exclusive_image.png" alt="exclusive_image" className='w-1/3' />
         </div>
       </div>
+      {/* new collection */}
+      <div className="">
+        <h1 className='text-center text-3xl font-semibold uppercase py-10'>new collection</h1>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pdg">
+          {
+            data.map((item)=>(
+              <div className="bg-gray-800 shadow p-3 space-y-1.5" key={item.id}>
+                <img src={item.image} alt={item.name} className='w-full rounded' />
+                <h2 className='font-semibold'>{item.name}</h2>
+                <div className="flex items-center justify-between px-2">
+                  <p>{item.new_price}$</p>
+                   <p className=''>{item.old_price}$</p>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+      {/*  */}
+      <div className="bg-gradient-to-b from-gray-950 to-white/90 w-full max-w-7xl mx-auto p-6">
+  <div className="text-center text-gray-900 space-y-5">
+<h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-sky-500 to-indigo-600 bg-clip-text text-transparent">
+  Get Exclusive Offers in Your Inbox
+</h1>
+    <p className="text-base md:text-lg">
+      Subscribe to our newsletter and be the first to know about new arrivals, exclusive offers, and more!
+    </p>
+
+    <form className="flex flex-col md:flex-row items-center justify-center gap-3 mt-6">
+      <input
+        type="email"
+        placeholder="Enter your email"
+        className="w-full md:w-80 px-4 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-sky-400 transition"
+      />
+      <button
+        type="submit"
+        className="bg-gray-800 text-white px-6 py-2 rounded-md hover:bg-gray-700 transition duration-300 shadow"
+      >
+        Subscribe
+      </button>
+    </form>
+  </div>
+</div>
+
       {/* footer */}
-      <Footer/>
+      <div className="pt-10">
+        <Footer/>
+      </div>
     </div>
     </>
   )
