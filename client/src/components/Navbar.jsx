@@ -16,7 +16,10 @@ const Navbar = () => {
           <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
             <button className='border border-gray-300 px-5 py-2 cursor-pointer rounded shadow
              hover:bg-gray-300 hover:text-gray-900 transition duration-300' onClick={()=>navigate("/login")}>Login</button>
-            <ShoppingBasket/>
+            <ShoppingBasket 
+            className='cursor-pointer text-gray-400
+             hover:text-gray-600 transition duration-300'
+              onClick={()=>navigate("/cart")}/>
           </div>
       </header>
     </>
