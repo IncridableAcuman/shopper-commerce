@@ -45,7 +45,7 @@ const MenPage = () => {
         </div>
         {/* cards */}
         <div className="">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-5">
           {
             data.map((item)=>(
               <div className="bg-gray-800 shadow p-3 space-y-1.5" key={item.id}>
@@ -60,9 +60,13 @@ const MenPage = () => {
           }
         </div>
         {/* btn */}
-        <button className='flex items-center justify-center mx-auto mt-4 border border-gray-300 px-5 py-2
+        <button className='flex items-center justify-center mx-auto my-4 border border-gray-300 px-5 py-2
          cursor-pointer hover:bg-gray-300 hover:text-gray-900 transition duration-300'>Show more</button>
         </div>
+      </div>
+      {/* banner */}
+      <div className="w-full max-w-7xl mx-auto my-10 p-4">
+        <img src="./man-c.jpg" alt="man" className='rounded' />
       </div>
       {/* footer */}
       <Footer/>

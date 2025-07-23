@@ -64,6 +64,10 @@ const WomenPage = () => {
          cursor-pointer hover:bg-gray-300 hover:text-gray-900 transition duration-300'>Show more</button>
         </div>
       </div>
+      {/* banner */}
+      <div className="w-full max-w-7xl mx-auto my-10 p-4">
+        <img src="./woman-c.jpg" alt="woman" className='rounded' />
+      </div>
       {/* footer */}
       <Footer/>
     </div>
