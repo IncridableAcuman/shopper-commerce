@@ -9,17 +9,17 @@ const Navbar = () => {
         <img src="./logo.png" alt="logo" className='w-12 cursor-pointer' />
         <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
               <Link to={"/"} className='hover:text-sky-700 transition duration-300'>Home</Link>
-              <Link to={"/men"} className='hover:text-sky-700 transition duration-300'>Men</Link>
-              <Link to={"/women"} className='hover:text-sky-700 transition duration-300'>Women</Link>
-              <Link to={"/kids"} className='hover:text-sky-700 transition duration-300'>Kids</Link>
-              <Link to={"/admin"} className='hover:text-sky-700 transition duration-300'>Admin</Link>
+              <Link to={"/men"} className='hover:text-green-700 transition duration-300'>Men</Link>
+              <Link to={"/women"} className='hover:text-green-700 transition duration-300'>Women</Link>
+              <Link to={"/kids"} className='hover:text-green-700 transition duration-300'>Kids</Link>
+              <Link to={"/admin"} className='hover:text-green-700 transition duration-300'>Admin</Link>
           </div>
           <div className="flex items-center gap-4 sm:gap-6 md:gap-8 lg:gap-10">
-            <button className='border border-gray-300 px-5 py-2 cursor-pointer rounded shadow
-             hover:bg-gray-300 hover:text-gray-900 transition duration-300' onClick={()=>navigate("/login")}>Login</button>
+            <button className='border border-green-500 px-5 py-2 cursor-pointer rounded shadow
+             hover:bg-green-500 hover:text-gray-900 transition duration-300' onClick={()=>navigate("/login")}>Login</button>
             <ShoppingBasket 
-            className='cursor-pointer text-gray-400
-             hover:text-gray-600 transition duration-300'
+            className='cursor-pointer text-green-400
+             hover:text-green-600 transition duration-300'
               onClick={()=>navigate("/cart")}/>
           </div>
       </header>
