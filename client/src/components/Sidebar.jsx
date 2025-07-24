@@ -1,9 +1,10 @@
 import { Info, Menu, X } from 'lucide-react';
 import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
     const [isOpen,setIsOpen]=useState(false);
+    const navigate=useNavigate();
 
     const data=[
         {name:"Products",icon:<Info size={20} />,path:"/admin/products"},
@@ -16,7 +17,8 @@ const Sidebar = () => {
         transform ${isOpen? "translate-x-0":"-translate-x-64"} 
         transition-transform duration-300 ease-in-out lg:translate-x-0`}>
             <div className="flex items-center justify-between p-4 border-b border-gray-700">
-                <h1 className='text-lg font-semibold'>Dashboard</h1>
+                <h1 className='text-lg font-semibold cursor-pointer'
+                 onClick={()=>navigate("/")}>Dashboard</h1>
                 {isOpen && (
                     <button className='lg:hidden text-gray-300 hover:text-white'
                      onClick={()=>setIsOpen(false)}>
