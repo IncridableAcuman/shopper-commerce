@@ -13,6 +13,9 @@ import WomenPage from './pages/WomenPage'
 import ProductData from './pages/ProductData'
 import Payment from './pages/Payment'
 import { ToastContainer } from 'react-toastify'
+import Admin from './admin/Admin'
+import Products from './admin/Products'
+import Create from './admin/Create'
 const App = () => {
   return (
     <>
@@ -31,6 +34,10 @@ const App = () => {
       <Route path='/data/:id' element={<ProductData/>} />
       <Route path='/payment' element={<Payment/>}  />
       <Route path='/cart' element={<Cart/>} />
+      <Route path='/admin' element={<Admin/>}>
+      <Route path='/admin/products' element={<Products/>} />
+      <Route path='/admin/create' element={<Create/>} />      
+      </Route>
     </Routes>
     </>
   )
