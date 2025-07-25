@@ -10,6 +10,10 @@ const ResetPassword = () => {
   const [confirmPassword,setConfirmPassword]=useState('');
   const navigate=useNavigate();
 
+    if(localStorage.getItem("accessToken")){
+    navigate("/")
+  }
+
   const handleSubmit=async (e)=>{
     e.preventDefault();
     if(password!==confirmPassword){

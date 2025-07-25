@@ -10,11 +10,16 @@ const Register = () => {
   const [password,setPassword]=useState('');
   const navigate=useNavigate();
 
+  if(localStorage.getItem("accessToken")){
+    navigate("/")
+  }
+
   const handleSubmit=async (e)=>{
     e.preventDefault();
     try {
       const {data}=await axiosInstance.post("/auth/register",{username,email,password});
       localStorage.setItem("accessToken",data.accessToken);
+      localStorage.setItem("role",data?.role)
       toast.success(data?.message || "Successfully");
       navigate("/")
     } catch (error) {

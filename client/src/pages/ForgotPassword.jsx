@@ -2,9 +2,15 @@ import { Mail, Send } from 'lucide-react'
 import { useState } from 'react';
 import axiosInstance from '../hooks/axiosInstance';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = () => {
   const [email,setEmail]=useState('');
+  const navigate=useNavigate();
+
+    if(localStorage.getItem("accessToken")){
+    navigate("/")
+  }
 
   const handleSubmit=async (e)=>{
     e.preventDefault();
